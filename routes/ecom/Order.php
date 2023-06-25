@@ -50,10 +50,6 @@ Route::group(['middleware' => 'isCustomer'], function(){
      */
     Route::post('/orders', function (Request $request) {
         try {
-            $request->merge([
-                'combo_id' => $request->combo_id ? $request->combo_id : Null
-            ]);
-
             $validator = Validator::make($request->all(), [
                 'customer_id' => ['required'],
                 'order_type' => ['required'],
@@ -91,8 +87,8 @@ Route::group(['middleware' => 'isCustomer'], function(){
 
                 $orderItem = new OrderItem();
                 $orderItem->order_id = $order->id;
-                $orderItem->inventory_id = $item['inventory_id'];
-                $orderItem->combo_id = $item['combo_id'];
+                $orderItem->inventory_id = $item['inventory_id'] ? $item['inventory_id'] : null;
+                $orderItem->combo_id = $item['combo_id'] ? $item['combo_id'] : null;
                 $orderItem->quantity = $item['quantity'];
                 $orderItem->unit_price = $item['unit_price'];
                 $orderItem->save();

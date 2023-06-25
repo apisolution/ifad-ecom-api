@@ -83,15 +83,12 @@ $app->configure('app');
 
 $app->middleware([
     App\Http\Middleware\CorsMiddleware::class,
-    App\Http\Middleware\IsCustomerMiddleware::class,
     \Illuminate\Session\Middleware\StartSession::class,
-    'isCustomer' => App\Http\Middleware\IsCustomerMiddleware::class,
  ]);
 
 $app->routeMiddleware([
     'isCustomer' => App\Http\Middleware\IsCustomerMiddleware::class,
 ]);
-
 
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
