@@ -89,4 +89,5 @@ $router->group(['prefix' => 'ecom'], function () use ($router) {
     include_once 'ecom/Inventory.php';
     include_once 'ecom/Order.php';
     include_once 'ecom/PaymentMethod.php';
+    include_once 'ecom/Common.php';
 });

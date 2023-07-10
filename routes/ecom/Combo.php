@@ -18,9 +18,19 @@ use Illuminate\Support\Facades\Route;
 /**
  *
  */
-Route::get('/combos', function () {
+Route::get('/combos', function (Request $request) {
     try {
-        return Combo::with(['comboCategory', 'comboItems', 'comboImages'])->paginate();
+        $query = Combo::query();
+
+        $query->when($request->order_column && $request->order_by, function ($q) use ($request) {
+            $q->orderBy($request->order_column, $request->order_by);
+        });
+
+        $query->when($request->limit, function ($q) use ($request) {
+            $q->limit($request->limit);
+        });
+
+        $query->paginate();
     } catch (Exception $exception) {
         return make_error_response($exception->getMessage());
     }

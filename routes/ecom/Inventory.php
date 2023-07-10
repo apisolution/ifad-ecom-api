@@ -20,9 +20,44 @@ use Illuminate\Support\Facades\Route;
  */
 Route::get('/inventories', function (Request $request) {
     try {
-        return Inventory::with(['product', 'inventoryVariants', 'inventoryImages'])
-            ->groupBy('product_id')
-            ->paginate();
+        $query = Inventory::query();
+        $query->with(['product', 'inventoryVariants', 'inventoryImages']);
+        $query->groupBy('product_id');
+
+        $query->when($request->order_column && $request->order_by, function ($q) use ($request) {
+            $q->orderBy($request->order_column, $request->order_by);
+        });
+
+        $query->when($request->limit, function ($q) use ($request) {
+            $q->limit($request->limit);
+        });
+
+        return $query->paginate();
+    } catch (Exception $exception) {
+        return make_error_response($exception->getMessage());
+    }
+});
+
+/**
+ *
+ */
+Route::get('/inventories/discounted', function (Request $request) {
+    try {
+        $query = Inventory::query();
+        $query->with(['product', 'inventoryVariants', 'inventoryImages']);
+        $query->whereDate('offer_start', '<=', date('Y-m-d'));
+        $query->whereDate('offer_end', '>=', date('Y-m-d'));
+        $query->groupBy('product_id');
+
+        $query->when($request->order_column && $request->order_by, function ($q) use ($request) {
+            $q->orderBy($request->order_column, $request->order_by);
+        });
+
+        $query->when($request->limit, function ($q) use ($request) {
+            $q->limit($request->limit);
+        });
+
+        return $query->paginate();
     } catch (Exception $exception) {
         return make_error_response($exception->getMessage());
     }
@@ -33,12 +68,22 @@ Route::get('/inventories', function (Request $request) {
  */
 Route::get('/inventories/categories/{categoryId}', function (Request $request, $categoryId) {
     try {
-        return Inventory::with(['product', 'inventoryVariants', 'inventoryImages'])
-            ->whereHas('product', function ($query) use ($categoryId) {
-                $query->where('category_id', $categoryId);
-            })
-            ->groupBy('product_id')
-            ->paginate();
+        $query = Inventory::query();
+        $query->with(['product', 'inventoryVariants', 'inventoryImages']);
+        $query->whereHas('product', function ($query) use ($categoryId) {
+            $query->where('category_id', $categoryId);
+        });
+        $query->groupBy('product_id');
+
+        $query->when($request->order_column && $request->order_by, function ($q) use ($request) {
+            $q->orderBy($request->order_column, $request->order_by);
+        });
+
+        $query->when($request->limit, function ($q) use ($request) {
+            $q->limit($request->limit);
+        });
+
+        return $query->paginate();
     } catch (Exception $exception) {
         return make_error_response($exception->getMessage());
     }

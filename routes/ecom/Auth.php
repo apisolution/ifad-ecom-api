@@ -97,3 +97,34 @@ Route::post('/logout', function (Request $request) {
         return make_error_response($exception->getMessage());
     }
 });
+
+/**
+ *
+ */
+Route::post('/change-password', function (Request $request) {
+    try {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string|min:8',
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return make_validation_error_response($validator->getMessageBag());
+        }
+
+        $customer = Customer::where('email', $request->email)->first();
+        if (empty($customer)) throw new Exception("Customer not found.");
+
+        if (Hash::check($request->password, $customer->password)) {
+            $customer->api_token = Str::random(60);
+            $customer->update();
+        }
+
+        return make_success_response("Login successfully.", [
+            'api_token' => $customer->api_token
+        ]);
+    } catch (Exception $exception) {
+        return make_error_response($exception->getMessage());
+    }
+});

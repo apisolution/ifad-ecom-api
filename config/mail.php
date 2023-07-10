@@ -111,5 +111,12 @@ return [
     |
     */
     'log_channel' => env('MAIL_LOG_CHANNEL'),
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Receiver
+    |--------------------------------------------------------------------------
+    |
+    */
+    'contact_form_recipient_email' => env('CONTACT_FORM_RECIPIENT_EMAIL', 'masud.ncse@gmail.com'),
 ];
 
