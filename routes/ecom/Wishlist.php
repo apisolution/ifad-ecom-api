@@ -16,73 +16,76 @@ use Illuminate\Support\Facades\Validator;
 |
 */
 
-/**
- *
- */
-Route::get('/wishlist', function (Request $request) {
-    try {
-        return Wishlist::with('customer', 'inventory')->get();
-    } catch (Exception $exception) {
-        return make_error_response($exception->getMessage());
-    }
-});
+Route::group(['middleware' => 'isCustomer'], function () {
 
-/**
- *
- */
-Route::get('/wishlist/{id}', function ($id) {
-    try {
-        return Wishlist::with('customer', 'inventory')->findOrFail($id);
-    } catch (Exception $exception) {
-        return make_error_response($exception->getMessage());
-    }
-});
-
-/**
- *
- */
-Route::post('/wishlist', function (Request $request) {
-    try {
-        $validator = Validator::make($request->all(), [
-            'customer_id' => ['required', 'numeric',],
-            'inventory_id' => ['required', 'numeric',],
-        ]);
-
-        if ($validator->fails()) {
-            return make_validation_error_response($validator->getMessageBag());
+    /**
+     *
+     */
+    Route::get('/wishlist', function (Request $request) {
+        try {
+            return Wishlist::with('customer', 'inventory', 'combo')->get();
+        } catch (Exception $exception) {
+            return make_error_response($exception->getMessage());
         }
+    });
 
-        $isExists = Wishlist::where('customer_id', $request->customer_id)
-            ->where('inventory_id', $request->inventory_id)->exists();
-
-        if ($isExists) {
-            return make_error_response("Already existed.");
+    /**
+     *
+     */
+    Route::get('/wishlist/{id}/show', function ($id) {
+        try {
+            return Wishlist::with('customer', 'inventory', 'combo')->findOrFail($id);
+        } catch (Exception $exception) {
+            return make_error_response($exception->getMessage());
         }
+    });
 
-        $wishlist = new Wishlist();
-        $wishlist->customer_id = $request->customer_id;
-        $wishlist->inventory_id = $request->inventory_id;
-        $wishlist->save();
+    /**
+     *
+     */
+    Route::post('/wishlist', function (Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'customer_id' => ['required', 'numeric',],
+                'inventory_id' => ['required', 'numeric',],
+            ]);
 
-        return make_success_response("Record saved successfully.");
-    } catch (Exception $exception) {
-        return make_error_response($exception->getMessage());
-    }
-});
+            if ($validator->fails()) {
+                return make_validation_error_response($validator->getMessageBag());
+            }
 
-/**
- *
- */
-Route::delete('/wishlist/{id}', function ($id) {
-    try {
-        $wishlist = Wishlist::findOrFail($id);
+            $isExists = Wishlist::where('customer_id', $request->customer_id)
+                ->where('inventory_id', $request->inventory_id)->exists();
 
-        if ($wishlist) {
-            $wishlist->delete();
+            if ($isExists) {
+                return make_error_response("Already existed.");
+            }
+
+            $wishlist = new Wishlist();
+            $wishlist->customer_id = $request->customer_id;
+            $wishlist->inventory_id = $request->inventory_id;
+            $wishlist->save();
+
+            return make_success_response("Record saved successfully.");
+        } catch (Exception $exception) {
+            return make_error_response($exception->getMessage());
         }
+    });
 
-        return make_success_response("Record deleted successfully.");
-    } catch (Exception $exception) {
-        return make_error_response($exception->getMessage());
-    }
+    /**
+     *
+     */
+    Route::delete('/wishlist/{id}', function ($id) {
+        try {
+            $wishlist = Wishlist::findOrFail($id);
+
+            if ($wishlist) {
+                $wishlist->delete();
+            }
+
+            return make_success_response("Record deleted successfully.");
+        } catch (Exception $exception) {
+            return make_error_response($exception->getMessage());
+        }
+    });
 });

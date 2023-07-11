@@ -29,7 +29,7 @@ Route::get('/payment-methods', function (Request $request) {
 /**
  *
  */
-Route::get('/payment-methods/{id}', function ($id) {
+Route::get('/payment-methods/{id}/show', function ($id) {
     try {
         return PaymentMethod::findOrFail($id);
     } catch (Exception $exception) {

@@ -29,7 +29,7 @@ Route::get('/categories', function (Request $request) {
 /**
  *
  */
-Route::get('/categories/{id}', function (Request $request, $id) {
+Route::get('/categories/{id}/show', function (Request $request, $id) {
     try {
         return Category::findOrFail($id);
     } catch (Exception $exception) {

@@ -5,6 +5,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SubCategory;
 use App\Models\Product;
+
+/**
+ * @method static paginate()
+ * @method static findOrFail($id)
+ */
 class Category extends Model
 {
     use HasFactory;

@@ -29,7 +29,7 @@ Route::get('/combo-categories', function (Request $request) {
 /**
  *
  */
-Route::get('/combo-categories/{id}', function (Request $request, $id) {
+Route::get('/combo-categories/{id}/show', function (Request $request, $id) {
     try {
         return ComboCategory::findOrFail($id);
     } catch (Exception $exception) {

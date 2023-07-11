@@ -37,7 +37,7 @@ Route::group(['middleware' => 'isCustomer'], function(){
     /**
      *
      */
-    Route::get('/orders/{id}', function ($id) {
+    Route::get('/orders/{id}/show', function ($id) {
         try {
             return Order::with('customer', 'paymentMethod', 'orderItems')->findOrFail($id);
         } catch (Exception $exception) {

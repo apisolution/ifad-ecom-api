@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/combos', function (Request $request) {
     try {
         $query = Combo::query();
+        $query->with('comboCategory', 'comboItems', 'comboImages');
 
         $query->when($request->order_column && $request->order_by, function ($q) use ($request) {
             $q->orderBy($request->order_column, $request->order_by);
@@ -30,7 +31,7 @@ Route::get('/combos', function (Request $request) {
             $q->limit($request->limit);
         });
 
-        $query->paginate();
+        return $query->paginate();
     } catch (Exception $exception) {
         return make_error_response($exception->getMessage());
     }

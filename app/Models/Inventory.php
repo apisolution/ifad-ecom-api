@@ -51,4 +51,12 @@ class Inventory extends Model
     {
         return $this->hasMany(InventoryImage::class, 'inventory_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class, 'inventory_id', 'id');
+    }
 }

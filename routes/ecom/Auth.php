@@ -101,30 +101,37 @@ Route::post('/logout', function (Request $request) {
 /**
  *
  */
-Route::post('/change-password', function (Request $request) {
-    try {
-        $validator = Validator::make($request->all(), [
-            'current_password' => 'required|string|min:8',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',
-        ]);
+Route::group(['middleware' => 'isCustomer'], function () {
 
-        if ($validator->fails()) {
-            return make_validation_error_response($validator->getMessageBag());
+    /**
+     *
+     */
+    Route::put('/change-password', function (Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'current_password' => 'required|string|min:6',
+                'password' => 'required|string|min:6|confirmed',
+                'password_confirmation' => 'required|string|min:6',
+            ]);
+
+            if ($validator->fails()) {
+                return make_validation_error_response($validator->getMessageBag());
+            }
+
+            $customer = Customer::find(auth_customer('id'));
+            if (!$customer) throw new Exception("Customer not found!");
+
+            if (Hash::check($request->current_password, $customer->password) === False) {
+                throw new Exception("Current password is incorrect.");
+            }
+
+            $customer->update([
+                'password' => Hash::make($request->password),
+            ]);
+        } catch (Exception $exception) {
+            return make_error_response($exception->getMessage());
         }
 
-        $customer = Customer::where('email', $request->email)->first();
-        if (empty($customer)) throw new Exception("Customer not found.");
-
-        if (Hash::check($request->password, $customer->password)) {
-            $customer->api_token = Str::random(60);
-            $customer->update();
-        }
-
-        return make_success_response("Login successfully.", [
-            'api_token' => $customer->api_token
-        ]);
-    } catch (Exception $exception) {
-        return make_error_response($exception->getMessage());
-    }
+        return make_success_response("Password changed successfully.");
+    });
 });

@@ -38,4 +38,12 @@ class Combo extends Model
     {
         return $this->hasMany(ComboImage::class, 'combo_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class, 'combo_id', 'id');
+    }
 }

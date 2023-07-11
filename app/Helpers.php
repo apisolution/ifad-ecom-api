@@ -160,6 +160,10 @@ function make_validation_error_response($errors = [], $message = 'The given data
     return response()->json($response, $code);
 }
 
+/**
+ * @param $key
+ * @return mixed
+ */
 function auth_customer($key)
 {
     return optional(Session::get('customer'))[$key];

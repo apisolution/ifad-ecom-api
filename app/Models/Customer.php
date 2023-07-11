@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static findOrFail($id)
+ * @method static paginate()
+ * @method static find(int $int)
+ */
 class Customer extends Model
 {
     protected $fillable = ['name', 'email', 'password', 'token'];
@@ -24,5 +29,13 @@ class Customer extends Model
     public function orders()
     {
         return $this->hasMany(Order::class, 'customer_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
     }
 }

@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static findOrFail($id)
+ * @method static where(string $string, $customer_id)
+ */
 class Wishlist extends Model
 {
     use HasFactory;
@@ -27,5 +31,13 @@ class Wishlist extends Model
     public function inventory()
     {
         return $this->belongsTo(Inventory::class, 'inventory_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function combo()
+    {
+        return $this->belongsTo(Combo::class, 'combo_id', 'id');
     }
 }
