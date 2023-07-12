@@ -110,7 +110,7 @@ Route::get('/inventories/subCategories/{subCategoryId}', function (Request $requ
  */
 Route::get('/inventories/{id}/show', function ($id) {
     try {
-        return Inventory::with(['product', 'inventoryVariants', 'inventoryImages'])->findOrFail($id);
+        return Inventory::with(['product', 'inventoryVariants', 'inventoryImages', 'reviews'])->findOrFail($id);
     } catch (Exception $exception) {
         return make_error_response($exception->getMessage());
     }

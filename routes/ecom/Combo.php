@@ -42,7 +42,7 @@ Route::get('/combos', function (Request $request) {
  */
 Route::get('/combos/{id}/show', function ($id) {
     try {
-        return Combo::with(['comboCategory', 'comboItems', 'comboImages'])->findOrFail($id);
+        return Combo::with(['comboCategory', 'comboItems', 'comboImages', 'reviews'])->findOrFail($id);
     } catch (Exception $exception) {
         return make_error_response($exception->getMessage());
     }
