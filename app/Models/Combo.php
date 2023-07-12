@@ -46,4 +46,12 @@ class Combo extends Model
     {
         return $this->hasMany(Wishlist::class, 'combo_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'combo_id', 'id')->where('status', Review::STATUS_APPROVED);;
+    }
 }

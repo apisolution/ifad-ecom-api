@@ -59,4 +59,12 @@ class Inventory extends Model
     {
         return $this->hasMany(Wishlist::class, 'inventory_id', 'id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'inventory_id', 'id')->where('status', Review::STATUS_APPROVED);
+    }
 }

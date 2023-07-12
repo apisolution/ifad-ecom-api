@@ -23,7 +23,7 @@ Route::group(['middleware' => 'isCustomer'], function () {
      */
     Route::get('/wishlist', function (Request $request) {
         try {
-            return Wishlist::with('customer', 'inventory', 'combo')->get();
+            return Wishlist::with('customer', 'inventory', 'combo')->paginate();
         } catch (Exception $exception) {
             return make_error_response($exception->getMessage());
         }
